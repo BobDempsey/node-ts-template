@@ -9,6 +9,7 @@ A simple and clean Node.js project template with TypeScript support.
 - 📦 **Modern Node.js** - Targets ES2020 and Node.js 18+
 - 🛠️ **Development Ready** - Pre-configured build and development scripts
 - 🔒 **Type-Safe Environment** - Zod-based environment variable validation and type safety
+- 🧪 **Testing Suite** - Jest and Supertest for comprehensive unit and integration testing
 
 ## Project Structure
 
@@ -20,10 +21,15 @@ node-ts-template/
 │   │   └── try-parse-env.ts # Zod environment parsing utility
 │   ├── types.d.ts          # TypeScript type definitions
 │   └── index.ts            # Main entry point
+├── tests/
+│   ├── unit/               # Unit tests
+│   ├── integration/        # Integration tests
+│   └── setup/              # Test configuration and utilities
 ├── dist/                   # Compiled JavaScript output (auto-generated)
 ├── node_modules/           # Dependencies
 ├── package.json            # Project configuration
 ├── tsconfig.json           # TypeScript configuration
+├── jest.config.js          # Jest testing configuration
 ├── .gitignore             # Git ignore rules
 └── README.md              # This file
 ```
@@ -76,6 +82,76 @@ npm start
 ### Other Commands
 
 - `npm run clean` - Remove the `dist/` directory
+
+### Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+#### Test Scripts
+
+- **`npm test`** - Run all tests once
+- **`npm run test:watch`** - Run tests in watch mode (reruns on file changes)
+- **`npm run test:coverage`** - Run tests with coverage report
+- **`npm run test:ci`** - Run tests in CI mode (no watch, with coverage)
+
+#### Running Specific Tests
+
+Run a single test file:
+
+```bash
+npm test -- tests/unit/env.test.ts --watch
+```
+
+Run a specific test case by name:
+
+```bash
+npm test -- --testNamePattern="should define correct schema structure" --watch
+```
+
+#### Test Structure
+
+The project includes comprehensive testing with Jest and Supertest:
+
+- **Unit Tests** (`tests/unit/`) - Test individual functions and modules
+
+  - Environment variable validation
+  - Zod schema testing
+  - Utility function testing
+
+- **Integration Tests** (`tests/integration/`) - Test complete workflows
+
+  - HTTP server endpoints
+  - Request/response handling
+  - Server performance testing
+
+- **Test Utilities** (`tests/setup/`) - Helper functions and configurations
+  - Mock environment setup
+  - Test server utilities
+  - Common test patterns
+
+#### Writing Tests
+
+Create test files with `.test.ts` or `.spec.ts` extensions in the `tests/` directory:
+
+```typescript
+// tests/unit/example.test.ts
+describe("Example Test", () => {
+  it("should pass", () => {
+    expect(true).toBe(true)
+  })
+})
+```
+
+Tests automatically have access to:
+
+- Jest testing framework
+- Supertest for HTTP testing
+- TypeScript support
+- Environment mocking utilities
 
 ## Configuration
 
@@ -172,6 +248,14 @@ const EnvSchema = z.object({
 - **ts-node** - Run TypeScript directly without compilation
 - **nodemon** - Monitor for file changes and auto-restart
 - **rimraf** - Cross-platform rm -rf command
+
+### Testing Dependencies
+
+- **jest** - JavaScript testing framework
+- **@types/jest** - TypeScript definitions for Jest
+- **ts-jest** - Jest transformer for TypeScript
+- **supertest** - HTTP testing library
+- **@types/supertest** - TypeScript definitions for Supertest
 
 ## License
 

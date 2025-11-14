@@ -1,13 +1,14 @@
 import dotenv from "dotenv"
 import { createServer } from "http"
 import "./lib/env"
+import { GREETING } from "./lib/constants"
 
 dotenv.config()
 const PORT: number = Number(process.env.PORT) || 3000
 
 const server = createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" })
-  res.end("Hello, TypeScript Node.js World!")
+  res.end(GREETING)
 })
 
 server.listen(PORT, () => {
