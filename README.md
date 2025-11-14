@@ -10,6 +10,7 @@ A simple and clean Node.js project template with TypeScript support.
 - 🛠️ **Development Ready** - Pre-configured build and development scripts
 - 🔒 **Type-Safe Environment** - Zod-based environment variable validation and type safety
 - 🧪 **Testing Suite** - Jest and Supertest for comprehensive unit and integration testing
+- 🎨 **Code Quality** - Biome for fast linting and formatting
 
 ## Project Structure
 
@@ -82,6 +83,19 @@ npm start
 ### Other Commands
 
 - `npm run clean` - Remove the `dist/` directory
+
+### Code Quality
+
+Format and lint your code with Biome:
+
+```bash
+npm run format        # Check formatting
+npm run format:fix    # Fix formatting issues
+npm run lint          # Check for linting issues
+npm run lint:fix      # Fix linting issues
+npm run check         # Run both linting and formatting checks
+npm run check:fix     # Fix both linting and formatting issues
+```
 
 ### Testing
 
@@ -248,6 +262,7 @@ const EnvSchema = z.object({
 - **ts-node** - Run TypeScript directly without compilation
 - **nodemon** - Monitor for file changes and auto-restart
 - **rimraf** - Cross-platform rm -rf command
+- **@biomejs/biome** - Fast linter and formatter for JavaScript/TypeScript
 
 ### Testing Dependencies
 
