@@ -1,8 +1,9 @@
 import dotenv from "dotenv"
 import { createServer } from "http"
+import "./lib/env"
 
 dotenv.config()
-const PORT = process.env.PORT || 3000
+const PORT: number = Number(process.env.PORT) || 3000
 
 const server = createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" })
