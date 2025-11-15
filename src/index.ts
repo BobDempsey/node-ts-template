@@ -1,28 +1,28 @@
 import dotenv from "dotenv"
-import { createServer } from "http"
+import { createServer } from "node:http"
 import "./lib/env"
 import { GREETING } from "./lib/constants"
 
 dotenv.config()
 const PORT: number = Number(process.env.PORT) || 3000
 
-const server = createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" })
-  res.end(GREETING)
+const server = createServer((_req, res) => {
+	res.writeHead(200, { "Content-Type": "text/plain" })
+	res.end(GREETING)
 })
 
 server.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`)
-  console.log(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
+	console.log(`🚀 Server is running on http://localhost:${PORT}`)
+	console.log(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
 })
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
-  console.log("🔄 SIGTERM received, shutting down gracefully...")
-  server.close(() => {
-    console.log("✅ Process terminated")
-    process.exit(0)
-  })
+	console.log("🔄 SIGTERM received, shutting down gracefully...")
+	server.close(() => {
+		console.log("✅ Process terminated")
+		process.exit(0)
+	})
 })
 
 export default server

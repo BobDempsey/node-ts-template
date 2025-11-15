@@ -11,12 +11,12 @@ import tryParseEnv from "./try-parse-env"
 import { NODE_ENV_VALUES } from "./constants"
 
 const EnvSchema = z.object({
-  NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
-  PORT: z
-    .string()
-    .default("3000")
-    .transform((val) => parseInt(val, 10))
-    .optional(),
+	NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
+	PORT: z
+		.string()
+		.default("3000")
+		.transform((val) => Number.parseInt(val, 10))
+		.optional(),
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>
