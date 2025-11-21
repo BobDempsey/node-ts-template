@@ -21,7 +21,6 @@ export default function tryParseEnv<T extends ZodRawShape>(
 			const e = new Error(message)
 			e.stack = ""
 			throw e
-			// biome-ignore lint/style/noUselessElse: <explanation> else is needed for type narrowing </explanation>
 		} else {
 			console.error(error)
 		}
