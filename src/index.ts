@@ -3,6 +3,8 @@ import "./lib/env"
 import dotenv from "dotenv"
 import { GREETING } from "./lib/constants"
 
+const test = true
+
 dotenv.config()
 const PORT: number = Number(process.env.PORT) || 3000
 
