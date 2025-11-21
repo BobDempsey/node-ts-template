@@ -17,7 +17,8 @@
 		"format": "biome format .",
 		"format:fix": "biome format --write .",
 		"check": "biome check .",
-		"check:fix": "biome check --write ."
+		"check:fix": "biome check --write .",
+		"prepare": "husky"
 	},
 	"keywords": [
 		"nodejs",
@@ -55,7 +56,9 @@
 		"@types/jest": "^30.0.0",
 		"@types/node": "^20.10.0",
 		"@types/supertest": "^6.0.3",
+		"husky": "^9.1.7",
 		"jest": "^30.2.0",
+		"lint-staged": "^16.2.7",
 		"nodemon": "^3.0.2",
 		"rimraf": "^5.0.5",
 		"supertest": "^7.1.4",
@@ -70,5 +73,8 @@
 	"dependencies": {
 		"dotenv": "^17.2.3",
 		"zod": "^4.1.12"
+	},
+	"lint-staged": {
+		"*": "biome check --write --no-errors-on-unmatched"
 	}
 }
