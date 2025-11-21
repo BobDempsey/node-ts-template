@@ -13,14 +13,14 @@ const originalConsoleLog = console.log
 const originalConsoleError = console.error
 
 beforeAll(() => {
-  // Optionally suppress console output during tests
-  // Uncomment the lines below to silence console output
-  // console.log = jest.fn();
-  // console.error = jest.fn();
+	// Optionally suppress console output during tests
+	// Uncomment the lines below to silence console output
+	// console.log = jest.fn();
+	// console.error = jest.fn();
 })
 
 afterAll(() => {
-  // Restore console methods
-  console.log = originalConsoleLog
-  console.error = originalConsoleError
+	// Restore console methods
+	console.log = originalConsoleLog
+	console.error = originalConsoleError
 })

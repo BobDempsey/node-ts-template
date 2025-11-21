@@ -1,4 +1,4 @@
-import { createServer, type Server } from "node:http"
+import { type Server, createServer } from "node:http"
 import request from "supertest"
 import { GREETING } from "../../src/lib/constants"
 

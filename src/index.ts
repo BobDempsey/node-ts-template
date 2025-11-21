@@ -1,5 +1,5 @@
+import { createServer } from "http"
 import dotenv from "dotenv"
-import { createServer } from "node:http"
 import "./lib/env"
 import { GREETING } from "./lib/constants"
 

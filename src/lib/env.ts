@@ -7,8 +7,8 @@
  */
 import { z } from "zod"
 
-import tryParseEnv from "./try-parse-env"
 import { NODE_ENV_VALUES } from "./constants"
+import tryParseEnv from "./try-parse-env"
 
 const EnvSchema = z.object({
 	NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
@@ -16,7 +16,7 @@ const EnvSchema = z.object({
 		.string()
 		.default("3000")
 		.transform((val) => Number.parseInt(val, 10))
-		.optional(),
+		.optional()
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>

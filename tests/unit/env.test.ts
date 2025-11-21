@@ -26,7 +26,7 @@ describe("Environment Configuration", () => {
 			// Import the schema after mocking
 			const expectedSchema = z.object({
 				NODE_ENV: z.string().optional(),
-				PORT: z.number().default(3000).optional(),
+				PORT: z.number().default(3000).optional()
 			})
 
 			// Test schema properties
@@ -36,7 +36,7 @@ describe("Environment Configuration", () => {
 
 		it("should have optional NODE_ENV field", () => {
 			const schema = z.object({
-				NODE_ENV: z.string().optional(),
+				NODE_ENV: z.string().optional()
 			})
 
 			// Should not throw with undefined NODE_ENV
@@ -46,7 +46,7 @@ describe("Environment Configuration", () => {
 
 		it("should have PORT with default value", () => {
 			const schema = z.object({
-				PORT: z.number().default(port).optional(),
+				PORT: z.number().default(port).optional()
 			})
 
 			// Should not throw with undefined PORT and should use default
@@ -73,7 +73,7 @@ describe("Environment Configuration", () => {
 			const schema = z.object({
 				PORT: z
 					.string()
-					.transform((val: string) => (val ? Number.parseInt(val, 10) : 3000)),
+					.transform((val: string) => (val ? Number.parseInt(val, 10) : 3000))
 			})
 
 			const result = schema.parse({ PORT: port.toString() })
@@ -83,7 +83,7 @@ describe("Environment Configuration", () => {
 
 		it("should handle NODE_ENV values", () => {
 			const schema = z.object({
-				NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
+				NODE_ENV: z.enum(NODE_ENV_VALUES).optional()
 			})
 
 			for (const env of NODE_ENV_VALUES) {

@@ -1,3 +1,5 @@
+import type { Server } from "http"
+
 /**
  * Test utilities and helper functions for testing environment variables and server setup.
  */
@@ -7,12 +9,14 @@
  * @param overrides - Environment variables to override
  * @returns Mock environment object
  */
-export function createMockEnv(overrides: Record<string, string> = {}): Record<string, string | undefined> {
-  return {
-    NODE_ENV: 'test',
-    PORT: '0',
-    ...overrides,
-  };
+export function createMockEnv(
+	overrides: Record<string, string> = {}
+): Record<string, string | undefined> {
+	return {
+		NODE_ENV: "test",
+		PORT: "0",
+		...overrides
+	}
 }
 
 /**
@@ -21,22 +25,22 @@ export function createMockEnv(overrides: Record<string, string> = {}): Record<st
  * @param testFn - Test function to run with the environment
  */
 export async function withTestEnv<T>(
-  envVars: Record<string, string>,
-  testFn: () => Promise<T> | T
+	envVars: Record<string, string>,
+	testFn: () => Promise<T> | T
 ): Promise<T> {
-  const originalEnv = { ...process.env };
-  
-  try {
-    // Set test environment variables
-    Object.entries(envVars).forEach(([key, value]) => {
-      process.env[key] = value;
-    });
+	const originalEnv = { ...process.env }
 
-    return await testFn();
-  } finally {
-    // Restore original environment
-    process.env = originalEnv;
-  }
+	try {
+		// Set test environment variables
+		for (const [key, value] of Object.entries(envVars)) {
+			process.env[key] = value
+		}
+
+		return await testFn()
+	} finally {
+		// Restore original environment
+		process.env = originalEnv
+	}
 }
 
 /**
@@ -44,28 +48,32 @@ export async function withTestEnv<T>(
  * @param server - HTTP server instance
  * @param timeout - Maximum time to wait in milliseconds
  */
-export function waitForServer(server: any, timeout: number = 5000): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error(`Server did not start within ${timeout}ms`));
-    }, timeout);
 
-    if (server.listening) {
-      clearTimeout(timer);
-      resolve();
-      return;
-    }
+export function waitForServer(
+	server: Server,
+	timeout: number = 5000
+): Promise<void> {
+	return new Promise((resolve, reject) => {
+		const timer = setTimeout(() => {
+			reject(new Error(`Server did not start within ${timeout}ms`))
+		}, timeout)
 
-    server.on('listening', () => {
-      clearTimeout(timer);
-      resolve();
-    });
+		if (server.listening) {
+			clearTimeout(timer)
+			resolve()
+			return
+		}
 
-    server.on('error', (error: Error) => {
-      clearTimeout(timer);
-      reject(error);
-    });
-  });
+		server.on("listening", () => {
+			clearTimeout(timer)
+			resolve()
+		})
+
+		server.on("error", (error: Error) => {
+			clearTimeout(timer)
+			reject(error)
+		})
+	})
 }
 
 /**
@@ -73,49 +81,49 @@ export function waitForServer(server: any, timeout: number = 5000): Promise<void
  * @returns Promise that resolves to an available port number
  */
 export function getFreePort(): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const server = require('net').createServer();
-    
-    server.listen(0, () => {
-      const port = server.address()?.port;
-      server.close(() => {
-        if (port) {
-          resolve(port);
-        } else {
-          reject(new Error('Could not get free port'));
-        }
-      });
-    });
+	return new Promise((resolve, reject) => {
+		const server = require("net").createServer()
 
-    server.on('error', reject);
-  });
+		server.listen(0, () => {
+			const port = server.address()?.port
+			server.close(() => {
+				if (port) {
+					resolve(port)
+				} else {
+					reject(new Error("Could not get free port"))
+				}
+			})
+		})
+
+		server.on("error", reject)
+	})
 }
 
 /**
  * Cleans up test resources and resets modules
  */
 export function cleanupTest(): void {
-  // Reset all modules to ensure clean state
-  jest.resetModules();
-  
-  // Clear all mocks
-  jest.clearAllMocks();
+	// Reset all modules to ensure clean state
+	jest.resetModules()
+
+	// Clear all mocks
+	jest.clearAllMocks()
 }
 
 /**
  * Type definitions for test utilities
  */
 export interface TestServerOptions {
-  port?: number;
-  env?: Record<string, string>;
-  timeout?: number;
+	port?: number
+	env?: Record<string, string>
+	timeout?: number
 }
 
 /**
  * Mock server response for testing
  */
 export interface MockResponse {
-  status: number;
-  headers: Record<string, string>;
-  body: string;
+	status: number
+	headers: Record<string, string>
+	body: string
 }
