@@ -10,14 +10,12 @@
 		"ignore": ["coverage/", "dist/", "node_modules/"]
 	},
 	"formatter": {
-		"enabled": true,
 		"lineEnding": "lf"
 	},
 	"organizeImports": {
 		"enabled": true
 	},
 	"linter": {
-		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"correctness": {
@@ -27,6 +25,11 @@
 				"noInferrableTypes": "off",
 				"useNodejsImportProtocol": "off"
 			}
+		}
+	},
+	"json": {
+		"parser": {
+			"allowTrailingCommas": false
 		}
 	},
 	"javascript": {

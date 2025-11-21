@@ -1,6 +1,6 @@
 import { createServer } from "http"
-import dotenv from "dotenv"
 import "./lib/env"
+import dotenv from "dotenv"
 import { GREETING } from "./lib/constants"
 
 dotenv.config()

@@ -46,6 +46,10 @@
 	],
 	"author": "",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/BobDempsey/node-ts-template.git"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.5",
 		"@types/jest": "^30.0.0",
