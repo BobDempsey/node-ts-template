@@ -11,6 +11,7 @@ A simple and clean Node.js project template with TypeScript support.
 - 🔒 **Type-Safe Environment** - Zod-based environment variable validation and type safety
 - 🧪 **Testing Suite** - Jest and Supertest for comprehensive unit and integration testing
 - 🎨 **Code Quality** - Biome for fast linting and formatting
+- 📝 **Built-in Logger** - Custom logger with timestamps and log levels
 
 ## Project Structure
 
@@ -19,7 +20,9 @@ node-ts-template/
 ├── src/
 │   ├── lib/
 │   │   ├── env.ts           # Environment variable schema and validation
-│   │   └── try-parse-env.ts # Zod environment parsing utility
+│   │   ├── try-parse-env.ts # Zod environment parsing utility
+│   │   ├── logger.ts        # Custom logger with timestamps and log levels
+│   │   └── constants.ts     # Application constants
 │   ├── types.d.ts          # TypeScript type definitions
 │   └── index.ts            # Main entry point
 ├── tests/

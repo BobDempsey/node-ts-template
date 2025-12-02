@@ -2,6 +2,7 @@ import { createServer } from "http"
 import "./lib/env"
 import dotenv from "dotenv"
 import { GREETING } from "./lib/constants"
+import { logger } from "./lib/logger"
 
 dotenv.config()
 const PORT: number = Number(process.env.PORT) || 3000
@@ -12,15 +13,15 @@ const server = createServer((_req, res) => {
 })
 
 server.listen(PORT, () => {
-	console.log(`🚀 Server is running on http://localhost:${PORT}`)
-	console.log(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
+	logger.info(`🚀 Server is running on http://localhost:${PORT}`)
+	logger.info(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
 })
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
-	console.log("🔄 SIGTERM received, shutting down gracefully...")
+	logger.info("🔄 SIGTERM received, shutting down gracefully...")
 	server.close(() => {
-		console.log("✅ Process terminated")
+		logger.info("✅ Process terminated")
 		process.exit(0)
 	})
 })

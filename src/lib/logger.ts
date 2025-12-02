@@ -24,3 +24,11 @@ export const error = (message: string): void => {
 export const debug = (message: string): void => {
 	console.debug(formatMessage("debug", message))
 }
+
+// Logger object for cleaner API and easier mocking in tests
+export const logger = {
+	info,
+	warn,
+	error,
+	debug
+}
