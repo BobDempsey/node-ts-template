@@ -223,4 +223,16 @@ describe("index.ts - Server Instance", () => {
 			server = null as unknown as Server
 		})
 	})
+
+	describe("Error Handling", () => {
+		it("should have error event listener registered", async () => {
+			jest.resetModules()
+			const { default: importedServer } = await import("../../src/index")
+			server = importedServer
+
+			// Check that error handler is registered
+			const errorListeners = server.listeners("error")
+			expect(errorListeners.length).toBeGreaterThan(0)
+		})
+	})
 })

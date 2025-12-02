@@ -12,6 +12,16 @@ const server = createServer((_req, res) => {
 	res.end(GREETING)
 })
 
+// Handle server errors
+server.on("error", (err: NodeJS.ErrnoException) => {
+	if (err.code === "EADDRINUSE") {
+		logger.error(`❌ Port ${PORT} is already in use`)
+		process.exit(1)
+	}
+	logger.error(`❌ Server error: ${err.message}`)
+	process.exit(1)
+})
+
 server.listen(PORT, () => {
 	logger.info(`🚀 Server is running on http://localhost:${PORT}`)
 	logger.info(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
