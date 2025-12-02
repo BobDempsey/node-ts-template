@@ -89,6 +89,32 @@ describe("tryParseEnv", () => {
 
 			expect(() => tryParseEnv(TestSchema, mockEnv)).toThrow()
 		})
+
+		it("should handle non-ZodError exceptions", () => {
+			const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation()
+
+			// Create a schema
+			const TestSchema = z.object({
+				TEST_FIELD: z.string()
+			})
+
+			// Mock schema.parse to throw a non-ZodError
+			const mockParse = jest
+				.spyOn(TestSchema, "parse")
+				.mockImplementation(() => {
+					throw new TypeError("Unexpected error")
+				})
+
+			const mockEnv = { TEST_FIELD: "value" }
+
+			// Should not throw, but should log to console.error
+			expect(() => tryParseEnv(TestSchema, mockEnv)).not.toThrow()
+
+			expect(consoleErrorSpy).toHaveBeenCalledWith(expect.any(TypeError))
+
+			consoleErrorSpy.mockRestore()
+			mockParse.mockRestore()
+		})
 	})
 
 	describe("default process.env usage", () => {

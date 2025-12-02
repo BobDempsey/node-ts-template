@@ -234,5 +234,60 @@ describe("index.ts - Server Instance", () => {
 			const errorListeners = server.listeners("error")
 			expect(errorListeners.length).toBeGreaterThan(0)
 		})
+
+		it("should handle EADDRINUSE error when port is already in use", async () => {
+			const mockExit = jest.spyOn(process, "exit").mockImplementation()
+
+			jest.resetModules()
+			const { default: importedServer } = await import("../../src/index")
+			server = importedServer
+
+			// Wait for server to start
+			await new Promise((resolve) => setTimeout(resolve, 100))
+
+			// Create EADDRINUSE error
+			const error = new Error("Port in use") as NodeJS.ErrnoException
+			error.code = "EADDRINUSE"
+
+			// Emit error event
+			server.emit("error", error)
+
+			// Wait for error handler to process
+			await new Promise((resolve) => setTimeout(resolve, 50))
+
+			expect(mockLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining("already in use")
+			)
+			expect(mockExit).toHaveBeenCalledWith(1)
+
+			mockExit.mockRestore()
+		})
+
+		it("should handle generic server errors", async () => {
+			const mockExit = jest.spyOn(process, "exit").mockImplementation()
+
+			jest.resetModules()
+			const { default: importedServer } = await import("../../src/index")
+			server = importedServer
+
+			// Wait for server to start
+			await new Promise((resolve) => setTimeout(resolve, 100))
+
+			// Create generic error
+			const error = new Error("Some server error") as NodeJS.ErrnoException
+
+			// Emit error event
+			server.emit("error", error)
+
+			// Wait for error handler to process
+			await new Promise((resolve) => setTimeout(resolve, 50))
+
+			expect(mockLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining("Server error: Some server error")
+			)
+			expect(mockExit).toHaveBeenCalledWith(1)
+
+			mockExit.mockRestore()
+		})
 	})
 })
