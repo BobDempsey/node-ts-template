@@ -1,5 +1,9 @@
 # Node.js TypeScript Template
 
+[![Test and Build](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml)
+[![Biome Lint and Format](https://github.com/BobDempsey/node-ts-template/actions/workflows/biome.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/biome.yml)
+[![codecov](https://codecov.io/gh/BobDempsey/node-ts-template/branch/main/graph/badge.svg)](https://codecov.io/gh/BobDempsey/node-ts-template)
+
 A simple and clean Node.js project template with TypeScript support.
 
 ## Features
@@ -243,6 +247,39 @@ const EnvSchema = z.object({
 - **Type Safety** - Full TypeScript support for environment variables
 - **Clear Error Messages** - Helpful error messages for missing or invalid variables
 - **Default Values** - Support for default values when variables are optional
+
+## CI/CD
+
+This template includes GitHub Actions workflows for continuous integration and deployment:
+
+### Test and Build Workflow
+
+Runs on every push and pull request to `main` and `develop` branches:
+
+- **Matrix Testing** - Tests against Node.js versions 18, 20, and 22
+- **Test Coverage** - Runs full test suite with coverage reporting
+- **Build Validation** - Ensures the project builds successfully
+- **Coverage Upload** - Automatically uploads coverage reports to Codecov
+- **Artifact Storage** - Saves build artifacts for 7 days
+
+### Code Quality Workflow
+
+Ensures code quality standards:
+
+- **Biome Linting** - Checks code style and potential issues
+- **Formatting** - Validates code formatting
+- **Auto-fix** - Automatically fixes formatting issues when possible
+
+### Setting Up Codecov (Optional)
+
+To enable coverage reporting:
+
+1. Sign up at [codecov.io](https://codecov.io)
+2. Add your repository
+3. Add `CODECOV_TOKEN` to your GitHub repository secrets
+4. Coverage reports will be automatically uploaded on each CI run
+
+If you don't want to use Codecov, the workflow will continue without failing.
 
 ## Scripts Explained
 
