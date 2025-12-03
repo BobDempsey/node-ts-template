@@ -1,6 +1,7 @@
 # Node.js TypeScript Template
 
-[![Test and Build](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml)
+[![Test](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/test.yml)
+[![Build](https://github.com/BobDempsey/node-ts-template/actions/workflows/build.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/build.yml)
 [![Biome Lint and Format](https://github.com/BobDempsey/node-ts-template/actions/workflows/biome.yml/badge.svg)](https://github.com/BobDempsey/node-ts-template/actions/workflows/biome.yml)
 [![codecov](https://codecov.io/gh/BobDempsey/node-ts-template/branch/main/graph/badge.svg)](https://codecov.io/gh/BobDempsey/node-ts-template)
 
@@ -252,14 +253,20 @@ const EnvSchema = z.object({
 
 This template includes GitHub Actions workflows for continuous integration and deployment:
 
-### Test and Build Workflow
+### Test Workflow
 
 Runs on every push and pull request to `main` and `develop` branches:
 
 - **Matrix Testing** - Tests against Node.js versions 18, 20, and 22
 - **Test Coverage** - Runs full test suite with coverage reporting
-- **Build Validation** - Ensures the project builds successfully
 - **Coverage Upload** - Automatically uploads coverage reports to Codecov
+
+### Build Workflow
+
+Runs on every push and pull request to `main` and `develop` branches:
+
+- **Matrix Building** - Builds on Node.js versions 18, 20, and 22
+- **Build Validation** - Ensures the project builds successfully and verifies artifacts
 - **Artifact Storage** - Saves build artifacts for 7 days
 
 ### Code Quality Workflow
