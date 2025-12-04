@@ -384,6 +384,14 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **supertest** - HTTP testing library
 - **@types/supertest** - TypeScript definitions for Supertest
 
+## Troubleshooting
+
+### Jest Error When First Opening the Project
+
+When you first open this project in your editor, you may see a Jest-related error before running `npm install`. This is expected behavior and occurs because Jest and its dependencies haven't been installed yet.
+
+**Solution:** Simply run `npm install` to install all project dependencies. The error will disappear once the packages are installed.
+
 ## License
 
 MIT
