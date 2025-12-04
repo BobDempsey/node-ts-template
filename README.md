@@ -135,6 +135,19 @@ npm test -- --testNamePattern="should define correct schema structure" --watch
 ```
 
 #### Test Structure
+### REST Client Tests (VS Code)
+
+This repo includes REST Client requests in `tests/rest/requests.http` for quick manual testing of the HTTP server from VS Code.
+
+- Install the VS Code extension `humao.rest-client` (recommended via `.vscode/extensions.json`).
+- Start the server: `npm run dev`.
+- Open `tests/rest/requests.http` and click "Send Request" above any request.
+- Requests use `@baseUrl = http://localhost:3000`. Change it as needed.
+
+These requests cover:
+- GET `/` with default headers
+- GET `/` with custom headers
+- POST `/` with a JSON body (server currently responds with GREETING)
 
 The project includes comprehensive testing with Jest and Supertest:
 
