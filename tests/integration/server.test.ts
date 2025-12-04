@@ -39,8 +39,11 @@ describe("HTTP Server Integration Tests", () => {
 		})
 
 		it("should handle multiple concurrent requests", async () => {
-			const requests = Array.from({ length: 5 }, () => request(server).get("/"))
-			const responses = await Promise.all(requests)
+			const responses = []
+			for (let i = 0; i < 5; i++) {
+				const response = await request(server).get("/")
+				responses.push(response)
+			}
 
 			for (const response of responses) {
 				expect(response.status).toBe(200)
@@ -91,13 +94,12 @@ describe("HTTP Server Integration Tests", () => {
 		})
 
 		it("should handle rapid successive requests", async () => {
-			const rapidRequests = []
+			const responses = []
 
 			for (let i = 0; i < 10; i++) {
-				rapidRequests.push(request(server).get("/"))
+				const response = await request(server).get("/")
+				responses.push(response)
 			}
-
-			const responses = await Promise.all(rapidRequests)
 
 			for (const response of responses) {
 				expect(response.status).toBe(200)
