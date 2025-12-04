@@ -47,8 +47,8 @@ node-ts-template/
 
 ### Prerequisites
 
-- Node.js 18.0.0 or higher
-- npm 9.0.0 or higher
+- Node.js 24.0.0 or higher
+- npm 10.0.0 or higher
 
 ### Installation
 
