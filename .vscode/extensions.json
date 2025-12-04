@@ -3,7 +3,6 @@
 		"better-ts-errors.better-ts-errors",
 		"biomejs.biome",
 		"Orta.vscode-jest",
-		"christian-kohler.path-intellisense",
-		"rangav.vscode-thunder-client"
+		"christian-kohler.path-intellisense"
 	]
 }

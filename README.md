@@ -43,7 +43,8 @@ node-ts-template/
 │   ├── unit/               # Unit tests
 │   ├── integration/        # Integration tests
 │   ├── rest/               # VS Code REST Client requests
-│   │   └── requests.http   # HTTP request examples
+│   │   ├── requests.http   # HTTP request examples
+│   │   └── README.md       # REST Client usage instructions
 │   └── setup/              # Test configuration and utilities
 ├── coverage/               # Test coverage reports (auto-generated)
 ├── dist/                   # Compiled JavaScript output (auto-generated)
@@ -159,19 +160,6 @@ npm test -- --testNamePattern="should define correct schema structure" --watch
 ```
 
 #### Test Structure
-### REST Client Tests (VS Code)
-
-This repo includes REST Client requests in `tests/rest/requests.http` for quick manual testing of the HTTP server from VS Code.
-
-- Install the VS Code extension `humao.rest-client` (recommended via `.vscode/extensions.json`).
-- Start the server: `npm run dev`.
-- Open `tests/rest/requests.http` and click "Send Request" above any request.
-- Requests use `@baseUrl = http://localhost:3000`. Change it as needed.
-
-These requests cover:
-- GET `/` with default headers
-- GET `/` with custom headers
-- POST `/` with a JSON body (server currently responds with GREETING)
 
 The project includes comprehensive testing with Jest and Supertest:
 
@@ -211,6 +199,36 @@ Tests automatically have access to:
 - Supertest for HTTP testing
 - TypeScript support
 - Environment mocking utilities
+
+### Manual API Testing
+
+This project includes configuration for manual API testing using two popular VS Code extensions:
+
+#### VS Code REST Client
+
+REST Client requests are available in [tests/rest/requests.http](tests/rest/requests.http).
+
+**Quick Start:**
+1. Install the `humao.rest-client` extension (recommended via `.vscode/extensions.json`)
+2. Start the server: `npm run dev`
+3. Open [tests/rest/requests.http](tests/rest/requests.http)
+4. Click "Send Request" above any request
+
+**Features:**
+- Simple text-based request format
+- Variable support with `@baseUrl`
+- Multiple requests in a single file
+- Inline response viewing
+
+See [tests/rest/README.md](tests/rest/README.md) for detailed usage instructions.
+
+#### Available Test Requests
+
+Both tools include the same set of test requests:
+- **Basic GET Requests** - Simple GET with various headers
+- **POST Requests** - JSON, form data, and plain text payloads
+- **Other HTTP Methods** - PUT, DELETE, PATCH requests
+- **Error & Edge Cases** - Content type mismatches and large payloads
 
 ## Recommended VS Code Extensions
 
