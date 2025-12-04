@@ -1,8 +1,8 @@
 import { z } from "zod"
-import { NODE_ENV_VALUES } from "../../src/lib/constants"
+import { NODE_ENV_VALUES } from "@/lib/constants"
 
 // Mock the tryParseEnv module before importing env
-jest.mock("../../src/lib/try-parse-env", () => {
+jest.mock("@/lib/try-parse-env", () => {
 	return jest.fn().mockImplementation(() => {
 		// Mock implementation that doesn't throw
 	})
@@ -70,7 +70,7 @@ describe("Environment Configuration", () => {
 		it("should export correct TypeScript types", async () => {
 			// This test verifies that the TypeScript compilation succeeds
 			// and the exported types are correct
-			const envModule = await import("../../src/lib/env")
+			const envModule = await import("@/lib/env")
 
 			expect(envModule.default).toBeDefined()
 			expect(typeof envModule.default).toBe("object")

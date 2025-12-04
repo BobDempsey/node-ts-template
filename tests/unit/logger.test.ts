@@ -33,14 +33,7 @@
  *    - Functions should accept string messages
  */
 
-import {
-	debug,
-	error,
-	info,
-	type LogLevel,
-	logger,
-	warn
-} from "../../src/lib/logger"
+import { debug, error, info, type LogLevel, logger, warn } from "@/lib/logger"
 
 describe("logger.ts", () => {
 	// Store original console methods

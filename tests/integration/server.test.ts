@@ -1,6 +1,6 @@
 import { createServer, type Server } from "http"
 import request from "supertest"
-import { GREETING } from "../../src/lib/constants"
+import { GREETING } from "@/lib/constants"
 
 // Create our own server instance for testing
 describe("HTTP Server Integration Tests", () => {

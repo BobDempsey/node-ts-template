@@ -7,8 +7,8 @@
  */
 import { z } from "zod"
 
-import { NODE_ENV_VALUES } from "./constants"
-import tryParseEnv from "./try-parse-env"
+import { NODE_ENV_VALUES } from "@/lib/constants"
+import tryParseEnv from "@/lib/try-parse-env"
 
 const EnvSchema = z.object({
 	NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),

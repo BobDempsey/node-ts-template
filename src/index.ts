@@ -1,8 +1,8 @@
 import dotenv from "dotenv"
 import { createServer } from "http"
-import { GREETING } from "./lib/constants"
-import env from "./lib/env"
-import { logger } from "./lib/logger"
+import { GREETING } from "@/lib/constants"
+import env from "@/lib/env"
+import { logger } from "@/lib/logger"
 
 dotenv.config()
 const PORT: number = env.PORT ?? 3000

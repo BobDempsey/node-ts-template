@@ -1,5 +1,5 @@
 import { z } from "zod"
-import tryParseEnv from "../../src/lib/try-parse-env"
+import tryParseEnv from "@/lib/try-parse-env"
 
 describe("tryParseEnv", () => {
 	const originalEnv = process.env
