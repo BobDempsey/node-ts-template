@@ -15,7 +15,10 @@ const EnvSchema = z.object({
 	PORT: z
 		.string()
 		.default("3000")
-		.transform((val) => Number.parseInt(val, 10))
+		.transform((val) => {
+			const parsed = Number.parseInt(val, 10)
+			return Number.isNaN(parsed) ? 3000 : parsed
+		})
 		.optional(),
 	CODECOV_TOKEN: z.string().optional()
 })

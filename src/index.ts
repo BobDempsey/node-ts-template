@@ -1,11 +1,11 @@
-import { createServer } from "http"
-import "./lib/env"
 import dotenv from "dotenv"
+import { createServer } from "http"
 import { GREETING } from "./lib/constants"
+import env from "./lib/env"
 import { logger } from "./lib/logger"
 
 dotenv.config()
-const PORT: number = Number(process.env.PORT) || 3000
+const PORT: number = env.PORT ?? 3000
 
 const server = createServer((_req, res) => {
 	res.writeHead(200, { "Content-Type": "text/plain" })
@@ -24,7 +24,7 @@ server.on("error", (err: NodeJS.ErrnoException) => {
 
 server.listen(PORT, () => {
 	logger.info(`🚀 Server is running on http://localhost:${PORT}`)
-	logger.info(`📁 Environment: ${process.env.NODE_ENV || "development"}`)
+	logger.info(`📁 Environment: ${env.NODE_ENV || "development"}`)
 })
 
 // Graceful shutdown
