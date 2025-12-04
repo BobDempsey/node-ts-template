@@ -16,7 +16,8 @@ const EnvSchema = z.object({
 		.string()
 		.default("3000")
 		.transform((val) => Number.parseInt(val, 10))
-		.optional()
+		.optional(),
+	CODECOV_TOKEN: z.string().optional()
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>
