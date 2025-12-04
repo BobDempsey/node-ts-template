@@ -28,12 +28,19 @@ server.listen(PORT, () => {
 })
 
 // Graceful shutdown
-process.on("SIGTERM", () => {
+const sigTermHandler = () => {
 	logger.info("🔄 SIGTERM received, shutting down gracefully...")
 	server.close(() => {
 		logger.info("✅ Process terminated")
 		process.exit(0)
 	})
-})
+}
+
+process.on("SIGTERM", sigTermHandler)
+
+// Export cleanup function for testing
+export const cleanup = () => {
+	process.removeListener("SIGTERM", sigTermHandler)
+}
 
 export default server

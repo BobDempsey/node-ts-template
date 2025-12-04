@@ -20,6 +20,7 @@ jest.mock("../../src/lib/logger", () => ({
 
 describe("index.ts - Server Instance", () => {
 	let server: Server
+	let cleanup: (() => void) | undefined
 	const originalEnv = process.env
 
 	beforeEach(() => {
@@ -33,6 +34,11 @@ describe("index.ts - Server Instance", () => {
 	})
 
 	afterEach(async () => {
+		// Clean up SIGTERM listener to prevent memory leak warning
+		if (cleanup) {
+			cleanup()
+			cleanup = undefined
+		}
 		// Clean up server if it's running
 		if (server?.listening) {
 			await new Promise<void>((resolve, reject) => {
@@ -54,8 +60,9 @@ describe("index.ts - Server Instance", () => {
 	describe("Server Initialization", () => {
 		it("should export a valid HTTP server instance", async () => {
 			// Import the server (this will start it)
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			expect(server).toBeDefined()
 			expect(typeof server.listen).toBe("function")
@@ -63,8 +70,9 @@ describe("index.ts - Server Instance", () => {
 		})
 
 		it("should handle requests on the exported server", async () => {
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			const response = await request(server).get("/")
 
@@ -80,8 +88,9 @@ describe("index.ts - Server Instance", () => {
 
 			// Clear the module cache and re-import
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			// Wait a bit for server to start
 			await new Promise((resolve) => setTimeout(resolve, 100))
@@ -96,8 +105,9 @@ describe("index.ts - Server Instance", () => {
 			delete process.env.PORT
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -110,8 +120,9 @@ describe("index.ts - Server Instance", () => {
 			process.env.PORT = "invalid"
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -127,8 +138,9 @@ describe("index.ts - Server Instance", () => {
 			process.env.NODE_ENV = "test"
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -144,8 +156,9 @@ describe("index.ts - Server Instance", () => {
 			delete process.env.NODE_ENV
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -158,8 +171,9 @@ describe("index.ts - Server Instance", () => {
 	describe("Server Response Behavior", () => {
 		it("should respond with GREETING constant", async () => {
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			const response = await request(server).get("/any-path")
 
@@ -168,8 +182,9 @@ describe("index.ts - Server Instance", () => {
 
 		it("should set correct content-type header", async () => {
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			const response = await request(server).get("/")
 
@@ -178,8 +193,9 @@ describe("index.ts - Server Instance", () => {
 
 		it("should respond with 200 status code", async () => {
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			const response = await request(server).get("/")
 
@@ -190,8 +206,9 @@ describe("index.ts - Server Instance", () => {
 	describe("Graceful Shutdown", () => {
 		it("should handle SIGTERM and close server gracefully", async () => {
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			// Mock process.exit to prevent test from exiting
 			const mockExit = jest.spyOn(process, "exit").mockImplementation()
@@ -227,8 +244,9 @@ describe("index.ts - Server Instance", () => {
 	describe("Error Handling", () => {
 		it("should have error event listener registered", async () => {
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			// Check that error handler is registered
 			const errorListeners = server.listeners("error")
@@ -239,8 +257,9 @@ describe("index.ts - Server Instance", () => {
 			const mockExit = jest.spyOn(process, "exit").mockImplementation()
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			// Wait for server to start
 			await new Promise((resolve) => setTimeout(resolve, 100))
@@ -267,8 +286,9 @@ describe("index.ts - Server Instance", () => {
 			const mockExit = jest.spyOn(process, "exit").mockImplementation()
 
 			jest.resetModules()
-			const { default: importedServer } = await import("../../src/index")
-			server = importedServer
+			const indexModule = await import("../../src/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
 
 			// Wait for server to start
 			await new Promise((resolve) => setTimeout(resolve, 100))

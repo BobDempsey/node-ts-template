@@ -13,10 +13,16 @@ const originalConsoleLog = console.log
 const originalConsoleError = console.error
 
 beforeAll(() => {
-	// Optionally suppress console output during tests
-	// Uncomment the lines below to silence console output
-	// console.log = jest.fn();
-	// console.error = jest.fn();
+	// Suppress dotenv console output during tests
+	console.log = ((...args: unknown[]) => {
+		// Filter out dotenv logs
+		const message = String(args[0])
+		if (message.includes("[dotenv@")) {
+			return
+		}
+		// Pass through other console.log calls
+		originalConsoleLog(...args)
+	}) as typeof console.log
 })
 
 afterAll(() => {
