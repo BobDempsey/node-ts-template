@@ -38,7 +38,7 @@ node-ts-template/
 ├── node_modules/           # Dependencies
 ├── package.json            # Project configuration
 ├── tsconfig.json           # TypeScript configuration
-├── jest.config.js          # Jest testing configuration
+├── jest.config.ts          # Jest testing configuration
 ├── .gitignore             # Git ignore rules
 └── README.md              # This file
 ```
