@@ -23,25 +23,38 @@ A simple and clean Node.js project template with TypeScript support.
 
 ```
 node-ts-template/
+├── .github/
+│   └── workflows/          # GitHub Actions CI/CD workflows
+│       ├── test.yml        # Test workflow with coverage
+│       ├── build.yml       # Build validation workflow
+│       └── biome.yml       # Code quality workflow
+├── .husky/                 # Git hooks configuration
+├── .vscode/                # VS Code workspace settings
+│   ├── extensions.json     # Recommended extensions
+│   └── settings.json       # Editor settings
 ├── src/
 │   ├── lib/
-│   │   ├── env.ts           # Environment variable schema and validation
+│   │   ├── env.ts          # Environment variable schema and validation
 │   │   ├── try-parse-env.ts # Zod environment parsing utility
-│   │   ├── logger.ts        # Custom logger with timestamps and log levels
-│   │   └── constants.ts     # Application constants
-│   ├── types.d.ts          # TypeScript type definitions
+│   │   ├── logger.ts       # Custom logger with timestamps and log levels
+│   │   └── constants.ts    # Application constants
 │   └── index.ts            # Main entry point
 ├── tests/
 │   ├── unit/               # Unit tests
 │   ├── integration/        # Integration tests
+│   ├── rest/               # VS Code REST Client requests
+│   │   └── requests.http   # HTTP request examples
 │   └── setup/              # Test configuration and utilities
+├── coverage/               # Test coverage reports (auto-generated)
 ├── dist/                   # Compiled JavaScript output (auto-generated)
 ├── node_modules/           # Dependencies
+├── .env.example            # Example environment variables
+├── .gitignore              # Git ignore rules
+├── biome.json              # Biome linter and formatter configuration
+├── jest.config.ts          # Jest testing configuration
 ├── package.json            # Project configuration
 ├── tsconfig.json           # TypeScript configuration
-├── jest.config.ts          # Jest testing configuration
-├── .gitignore             # Git ignore rules
-└── README.md              # This file
+└── README.md               # This file
 ```
 
 ## Getting Started
@@ -245,20 +258,7 @@ const EnvSchema = z.object({
    })
    ```
 
-2. Update the TypeScript types in `src/types.d.ts`:
-
-   ```typescript
-   declare namespace NodeJS {
-     interface ProcessEnv {
-       PORT: number
-       NODE_ENV: "development" | "production" | "test"
-       DATABASE_URL: string
-       API_KEY: string
-     }
-   }
-   ```
-
-3. Create a `.env` file in the root directory for development:
+2. Create a `.env` file in the root directory for development:
    ```env
    PORT=3000
    NODE_ENV=development
