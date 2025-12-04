@@ -1,3 +1,9 @@
 {
-	"recommendations": ["biomejs.biome", "humao.rest-client"]
+	"recommendations": [
+		"better-ts-errors.better-ts-errors",
+		"biomejs.biome",
+		"Orta.vscode-jest",
+		"christian-kohler.path-intellisense",
+		"rangav.vscode-thunder-client"
+	]
 }

@@ -212,6 +212,26 @@ Tests automatically have access to:
 - TypeScript support
 - Environment mocking utilities
 
+## Recommended VS Code Extensions
+
+This project includes recommended VS Code extensions in [.vscode/extensions.json](.vscode/extensions.json). When you open the project in VS Code, you'll be prompted to install them.
+
+### Included Extensions
+
+- **Better TypeScript Errors** (`better-ts-errors.better-ts-errors`) - Makes TypeScript error messages more readable and easier to understand
+- **Biome** (`biomejs.biome`) - Official Biome extension for linting and formatting with real-time feedback
+- **Jest** (`Orta.vscode-jest`) - Integrated Jest testing with inline test results and debugging
+- **Path Intellisense** (`christian-kohler.path-intellisense`) - Autocomplete for file paths in your code
+- **Thunder Client** (`rangav.vscode-thunder-client`) - Lightweight REST API client for testing HTTP endpoints
+
+### Installing Extensions
+
+VS Code will automatically prompt you to install recommended extensions when you open the project. Alternatively, you can:
+
+1. Open the Extensions view (Cmd+Shift+X on macOS, Ctrl+Shift+X on Windows/Linux)
+2. Type `@recommended` in the search box
+3. Install the extensions listed under "Workspace Recommendations"
+
 ## Configuration
 
 ### TypeScript Configuration
