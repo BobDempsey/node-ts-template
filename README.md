@@ -11,11 +11,12 @@ A simple and clean Node.js project template with TypeScript support.
 
 - 🚀 **TypeScript** - Full TypeScript support with strict type checking
 - 🔄 **Hot Reload** - Automatic restart on file changes during development
-- 📦 **Modern Node.js** - Targets ES2020 and Node.js 18+
+- 📦 **Modern Node.js** - Targets ES2020 and Node.js 24+
 - 🛠️ **Development Ready** - Pre-configured build and development scripts
 - 🔒 **Type-Safe Environment** - Zod-based environment variable validation and type safety
 - 🧪 **Testing Suite** - Jest and Supertest for comprehensive unit and integration testing
 - 🎨 **Code Quality** - Biome for fast linting and formatting
+- 🪝 **Pre-commit Hooks** - Husky and lint-staged for automatic code quality checks
 - 📝 **Built-in Logger** - Custom logger with timestamps and log levels
 
 ## Project Structure
@@ -104,6 +105,16 @@ npm run lint:fix      # Fix linting issues
 npm run check         # Run both linting and formatting checks
 npm run check:fix     # Fix both linting and formatting issues
 ```
+
+### Pre-commit Hooks
+
+This template uses Husky and lint-staged to ensure code quality before commits:
+
+- **Automatic Linting** - Biome automatically checks and fixes issues on staged files
+- **Format Enforcement** - Code is formatted consistently before each commit
+- **Zero Configuration** - Hooks are set up automatically on `npm install`
+
+The pre-commit hook runs `biome check --write` on all staged files, ensuring that only properly formatted and linted code is committed.
 
 ### Testing
 
@@ -270,7 +281,7 @@ This template includes GitHub Actions workflows for continuous integration and d
 
 Runs on every push and pull request to `main` and `develop` branches:
 
-- **Matrix Testing** - Tests against Node.js versions 18, 20, and 22
+- **Node.js 24** - Tests on the latest required version
 - **Test Coverage** - Runs full test suite with coverage reporting
 - **Coverage Upload** - Automatically uploads coverage reports to Codecov
 
@@ -278,7 +289,7 @@ Runs on every push and pull request to `main` and `develop` branches:
 
 Runs on every push and pull request to `main` and `develop` branches:
 
-- **Matrix Building** - Builds on Node.js versions 18, 20, and 22
+- **Matrix Building** - Builds on Node.js versions 22 and 24
 - **Build Validation** - Ensures the project builds successfully and verifies artifacts
 - **Artifact Storage** - Saves build artifacts for 7 days
 
@@ -307,6 +318,7 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **`npm run build`** - Compiles TypeScript using the TypeScript compiler (`tsc`)
 - **`npm start`** - Runs the compiled JavaScript from the `dist/` directory
 - **`npm run clean`** - Removes build artifacts
+- **`npm run prepare`** - Automatically sets up Husky git hooks (runs on `npm install`)
 
 ## Dependencies
 
@@ -323,6 +335,8 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **nodemon** - Monitor for file changes and auto-restart
 - **rimraf** - Cross-platform rm -rf command
 - **@biomejs/biome** - Fast linter and formatter for JavaScript/TypeScript
+- **husky** - Git hooks made easy
+- **lint-staged** - Run linters on git staged files
 
 ### Testing Dependencies
 
