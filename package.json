@@ -4,7 +4,7 @@
 	"description": "A Node.js TypeScript project template",
 	"main": "dist/index.js",
 	"scripts": {
-		"dev": "nodemon --exec ts-node src/index.ts",
+		"dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
 		"build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"start": "node dist/index.js",
 		"clean": "rimraf dist",
@@ -65,6 +65,7 @@
 		"ts-jest": "^29.4.5",
 		"ts-node": "^10.9.1",
 		"tsc-alias": "^1.8.16",
+		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.3.3"
 	},
 	"engines": {
