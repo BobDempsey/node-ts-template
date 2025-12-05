@@ -19,8 +19,7 @@ const EnvSchema = z.object({
 			const parsed = Number.parseInt(val, 10)
 			return Number.isNaN(parsed) ? 3000 : parsed
 		})
-		.optional(),
-	CODECOV_TOKEN: z.string().optional()
+		.optional()
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>

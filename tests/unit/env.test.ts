@@ -26,14 +26,12 @@ describe("Environment Configuration", () => {
 			// Import the schema after mocking
 			const expectedSchema = z.object({
 				NODE_ENV: z.string().optional(),
-				PORT: z.number().default(3000).optional(),
-				CODECOV_TOKEN: z.string().optional()
+				PORT: z.number().default(3000).optional()
 			})
 
 			// Test schema properties
 			expect(expectedSchema.shape.NODE_ENV).toBeDefined()
 			expect(expectedSchema.shape.PORT).toBeDefined()
-			expect(expectedSchema.shape.CODECOV_TOKEN).toBeDefined()
 		})
 
 		it("should have optional NODE_ENV field", () => {
@@ -54,15 +52,6 @@ describe("Environment Configuration", () => {
 			// Should not throw with undefined PORT and should use default
 			const result = schema.parse({})
 			expect(result.PORT).toBe(port)
-		})
-
-		it("should have optional CODECOV_TOKEN field", () => {
-			const schema = z.object({
-				CODECOV_TOKEN: z.string().optional()
-			})
-
-			expect(() => schema.parse({ CODECOV_TOKEN: undefined })).not.toThrow()
-			expect(() => schema.parse({})).not.toThrow()
 		})
 	})
 
