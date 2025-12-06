@@ -18,6 +18,7 @@ A simple and clean Node.js project template with TypeScript support.
 - 🎨 **Code Quality** - Biome for fast linting and formatting
 - 🪝 **Pre-commit Hooks** - Husky and lint-staged for automatic code quality checks
 - 📝 **Built-in Logger** - Custom logger with timestamps and log levels
+- 🔗 **Path Aliases** - TypeScript path aliases (@/*) for cleaner imports
 
 ## Project Structure
 
@@ -83,7 +84,7 @@ Start the development server with hot reload:
 npm run dev
 ```
 
-This will start the server on `http://localhost:3000` and automatically restart when you make changes to the code.
+This uses `nodemon` and `ts-node` to run TypeScript directly without compilation. The `tsconfig-paths/register` module is loaded to enable path alias resolution (`@/*`) at runtime. The server starts on `http://localhost:3000` and automatically restarts when you make changes to the code.
 
 ### Building
 
@@ -93,7 +94,7 @@ Compile TypeScript to JavaScript:
 npm run build
 ```
 
-This creates optimized JavaScript files in the `dist/` directory.
+This compiles TypeScript using `tsconfig.build.json` (which excludes tests) and resolves path aliases in the output using `tsc-alias`. The optimized JavaScript files are created in the `dist/` directory.
 
 ### Production
 
@@ -220,8 +221,6 @@ REST Client requests are available in [tests/rest/requests.http](tests/rest/requ
 - Multiple requests in a single file
 - Inline response viewing
 
-See [tests/rest/README.md](tests/rest/README.md) for detailed usage instructions.
-
 #### Available Test Requests
 
 Both tools include the same set of test requests:
@@ -253,13 +252,31 @@ VS Code will automatically prompt you to install recommended extensions when you
 
 ### TypeScript Configuration
 
-The `tsconfig.json` is configured with:
+This project uses two TypeScript configuration files:
 
-- Target: ES2020
-- Module: CommonJS
-- Strict type checking enabled
-- Source maps for debugging
-- Declaration files generation
+#### `tsconfig.json` (Development & Testing)
+
+The main TypeScript configuration for development and testing:
+
+- **Target**: ES2020
+- **Module**: CommonJS
+- **Strict Type Checking**: All strict mode options enabled
+- **Path Aliases**: `@/*` maps to `src/*` for cleaner imports
+- **Source Maps**: Enabled for debugging
+- **Declaration Files**: Generated for type definitions
+- **Includes**: Both `src/` and `tests/` directories
+
+#### `tsconfig.build.json` (Production Build)
+
+Extends `tsconfig.json` with production-specific settings:
+
+- **Root Directory**: Set to `./src` only
+- **Excludes**: Tests and non-production files
+- **Includes**: Only `src/**/*` files
+
+The path aliases (`@/*`) are resolved differently depending on the environment:
+- **Development**: `tsconfig-paths/register` resolves aliases at runtime
+- **Production Build**: `tsc-alias` resolves aliases in the compiled JavaScript output
 
 ### Environment Variables
 
@@ -271,8 +288,15 @@ Environment variables are defined and validated in `src/lib/env.ts` using Zod sc
 
 ```typescript
 const EnvSchema = z.object({
-  NODE_ENV: z.string().optional(),
-  PORT: z.number().default(3000).optional(),
+  NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
+  PORT: z
+    .string()
+    .default("3000")
+    .transform((val) => {
+      const parsed = Number.parseInt(val, 10)
+      return Number.isNaN(parsed) ? 3000 : parsed
+    })
+    .optional()
 })
 ```
 
@@ -287,9 +311,16 @@ const EnvSchema = z.object({
 
    ```typescript
    const EnvSchema = z.object({
-     NODE_ENV: z.string().optional(),
-     PORT: z.number().default(3000).optional(),
-     // Add your new variable here
+     NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
+     PORT: z
+       .string()
+       .default("3000")
+       .transform((val) => {
+         const parsed = Number.parseInt(val, 10)
+         return Number.isNaN(parsed) ? 3000 : parsed
+       })
+       .optional(),
+     // Add your new variables here
      DATABASE_URL: z.string().url(),
      API_KEY: z.string().min(1),
    })
@@ -351,8 +382,8 @@ If you don't want to use Codecov, the workflow will continue without failing.
 
 ## Scripts Explained
 
-- **`npm run dev`** - Uses `nodemon` and `ts-node` to run TypeScript directly with hot reload
-- **`npm run build`** - Compiles TypeScript using the TypeScript compiler (`tsc`)
+- **`npm run dev`** - Uses `nodemon` and `ts-node` with `tsconfig-paths/register` to run TypeScript directly with hot reload and path alias support
+- **`npm run build`** - Compiles TypeScript using `tsconfig.build.json` and resolves path aliases with `tsc-alias`
 - **`npm start`** - Runs the compiled JavaScript from the `dist/` directory
 - **`npm run clean`** - Removes build artifacts
 - **`npm run prepare`** - Automatically sets up Husky git hooks (runs on `npm install`)
@@ -369,6 +400,8 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **typescript** - TypeScript compiler
 - **@types/node** - Node.js type definitions
 - **ts-node** - Run TypeScript directly without compilation
+- **tsconfig-paths** - Load TypeScript path aliases at runtime
+- **tsc-alias** - Resolve TypeScript path aliases in compiled output
 - **nodemon** - Monitor for file changes and auto-restart
 - **rimraf** - Cross-platform rm -rf command
 - **@biomejs/biome** - Fast linter and formatter for JavaScript/TypeScript
