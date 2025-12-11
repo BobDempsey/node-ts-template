@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto"
 import dotenv from "dotenv"
 import { createServer } from "http"
 import { GREETING } from "@/lib/constants"
@@ -6,8 +7,22 @@ import { logger } from "@/lib/logger"
 
 dotenv.config()
 const PORT: number = env.PORT ?? 3000
+const SHUTDOWN_TIMEOUT = 10000
 
-const server = createServer((_req, res) => {
+const server = createServer((req, res) => {
+	// Generate or propagate request ID for tracing
+	const requestId = req.headers["x-request-id"]?.toString() || randomUUID()
+	res.setHeader("X-Request-Id", requestId)
+
+	// Health check endpoint
+	if (req.url === "/health") {
+		res.writeHead(200, { "Content-Type": "application/json" })
+		res.end(
+			JSON.stringify({ status: "ok", timestamp: new Date().toISOString() })
+		)
+		return
+	}
+
 	res.writeHead(200, { "Content-Type": "text/plain" })
 	res.end(GREETING)
 })
@@ -27,20 +42,46 @@ server.listen(PORT, () => {
 	logger.info(`📁 Environment: ${env.NODE_ENV || "development"}`)
 })
 
-// Graceful shutdown
-const sigTermHandler = () => {
-	logger.info("🔄 SIGTERM received, shutting down gracefully...")
+// Graceful shutdown with timeout
+const shutdown = (signal: string) => {
+	logger.info(`🔄 ${signal} received, shutting down gracefully...`)
 	server.close(() => {
 		logger.info("✅ Process terminated")
 		process.exit(0)
 	})
+
+	// Force exit after timeout if connections don't close
+	setTimeout(() => {
+		logger.error("❌ Forced shutdown after timeout")
+		process.exit(1)
+	}, SHUTDOWN_TIMEOUT)
 }
 
+// Signal handlers
+const sigTermHandler = () => shutdown("SIGTERM")
+const sigIntHandler = () => shutdown("SIGINT")
+const sigHupHandler = () => shutdown("SIGHUP")
+
 process.on("SIGTERM", sigTermHandler)
+process.on("SIGINT", sigIntHandler)
+process.on("SIGHUP", sigHupHandler)
+
+// Uncaught exception handling
+process.on("uncaughtException", (err) => {
+	logger.error(`❌ Uncaught exception: ${err.message}`)
+	process.exit(1)
+})
+
+process.on("unhandledRejection", (reason) => {
+	logger.error(`❌ Unhandled rejection: ${reason}`)
+	process.exit(1)
+})
 
 // Export cleanup function for testing
 export const cleanup = () => {
 	process.removeListener("SIGTERM", sigTermHandler)
+	process.removeListener("SIGINT", sigIntHandler)
+	process.removeListener("SIGHUP", sigHupHandler)
 }
 
 export default server

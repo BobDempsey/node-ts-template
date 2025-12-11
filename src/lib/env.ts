@@ -7,7 +7,7 @@
  */
 import { z } from "zod"
 
-import { NODE_ENV_VALUES } from "@/lib/constants"
+import { LOG_LEVEL_VALUES, NODE_ENV_VALUES } from "@/lib/constants"
 import tryParseEnv from "@/lib/try-parse-env"
 
 const EnvSchema = z.object({
@@ -19,7 +19,8 @@ const EnvSchema = z.object({
 			const parsed = Number.parseInt(val, 10)
 			return Number.isNaN(parsed) ? 3000 : parsed
 		})
-		.optional()
+		.optional(),
+	LOG_LEVEL: z.enum(LOG_LEVEL_VALUES).default("info").optional()
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>
