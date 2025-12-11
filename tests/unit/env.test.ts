@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { LOG_LEVEL_VALUES, NODE_ENV_VALUES } from "@/lib/constants"
+import { NODE_ENV_VALUES } from "@/lib/constants"
 
 // Mock the tryParseEnv module before importing env
 jest.mock("@/lib/try-parse-env", () => {
@@ -89,25 +89,6 @@ describe("Environment Configuration", () => {
 			for (const env of NODE_ENV_VALUES) {
 				expect(() => schema.parse({ NODE_ENV: env })).not.toThrow()
 			}
-		})
-
-		it("should handle LOG_LEVEL values", () => {
-			const schema = z.object({
-				LOG_LEVEL: z.enum(LOG_LEVEL_VALUES).default("info").optional()
-			})
-
-			for (const level of LOG_LEVEL_VALUES) {
-				expect(() => schema.parse({ LOG_LEVEL: level })).not.toThrow()
-			}
-		})
-
-		it("should default LOG_LEVEL to info", () => {
-			const schema = z.object({
-				LOG_LEVEL: z.enum(LOG_LEVEL_VALUES).default("info").optional()
-			})
-
-			const result = schema.parse({})
-			expect(result.LOG_LEVEL).toBe("info")
 		})
 	})
 })

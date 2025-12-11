@@ -8,6 +8,7 @@ import { logger } from "@/lib/logger"
 dotenv.config()
 const PORT: number = env.PORT ?? 3000
 const SHUTDOWN_TIMEOUT = 10000
+let shutdownTimer: NodeJS.Timeout | null = null
 
 const server = createServer((req, res) => {
 	// Generate or propagate request ID for tracing
@@ -51,10 +52,11 @@ const shutdown = (signal: string) => {
 	})
 
 	// Force exit after timeout if connections don't close
-	setTimeout(() => {
+	shutdownTimer = setTimeout(() => {
 		logger.error("❌ Forced shutdown after timeout")
 		process.exit(1)
 	}, SHUTDOWN_TIMEOUT)
+	shutdownTimer.unref()
 }
 
 // Signal handlers
@@ -67,21 +69,30 @@ process.on("SIGINT", sigIntHandler)
 process.on("SIGHUP", sigHupHandler)
 
 // Uncaught exception handling
-process.on("uncaughtException", (err) => {
+const uncaughtExceptionHandler = (err: Error) => {
 	logger.error(`❌ Uncaught exception: ${err.message}`)
 	process.exit(1)
-})
+}
 
-process.on("unhandledRejection", (reason) => {
+const unhandledRejectionHandler = (reason: unknown) => {
 	logger.error(`❌ Unhandled rejection: ${reason}`)
 	process.exit(1)
-})
+}
+
+process.on("uncaughtException", uncaughtExceptionHandler)
+process.on("unhandledRejection", unhandledRejectionHandler)
 
 // Export cleanup function for testing
 export const cleanup = () => {
 	process.removeListener("SIGTERM", sigTermHandler)
 	process.removeListener("SIGINT", sigIntHandler)
 	process.removeListener("SIGHUP", sigHupHandler)
+	process.removeListener("uncaughtException", uncaughtExceptionHandler)
+	process.removeListener("unhandledRejection", unhandledRejectionHandler)
+	if (shutdownTimer) {
+		clearTimeout(shutdownTimer)
+		shutdownTimer = null
+	}
 }
 
 export default server
