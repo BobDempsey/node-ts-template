@@ -7,6 +7,12 @@ const mockLoggerInfo = jest.fn()
 const mockLoggerWarn = jest.fn()
 const mockLoggerError = jest.fn()
 const mockLoggerDebug = jest.fn()
+const mockLoggerChild = jest.fn(() => ({
+	info: mockLoggerInfo,
+	warn: mockLoggerWarn,
+	error: mockLoggerError,
+	debug: mockLoggerDebug
+}))
 
 // Mock the logger before importing index
 jest.mock("@/lib/logger", () => ({
@@ -14,8 +20,10 @@ jest.mock("@/lib/logger", () => ({
 		info: mockLoggerInfo,
 		warn: mockLoggerWarn,
 		error: mockLoggerError,
-		debug: mockLoggerDebug
-	}
+		debug: mockLoggerDebug,
+		child: mockLoggerChild
+	},
+	createRequestLogger: mockLoggerChild
 }))
 
 describe("index.ts - Server Instance", () => {
@@ -31,6 +39,7 @@ describe("index.ts - Server Instance", () => {
 		mockLoggerWarn.mockClear()
 		mockLoggerError.mockClear()
 		mockLoggerDebug.mockClear()
+		mockLoggerChild.mockClear()
 	})
 
 	afterEach(async () => {
@@ -95,9 +104,10 @@ describe("index.ts - Server Instance", () => {
 			// Wait a bit for server to start
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
-			// Check that logger was called with the correct port
+			// Check that logger was called with the correct port (Pino uses objects)
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("4000")
+				expect.objectContaining({ port: 4000 }),
+				expect.any(String)
 			)
 		})
 
@@ -112,7 +122,8 @@ describe("index.ts - Server Instance", () => {
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("3000")
+				expect.objectContaining({ port: 3000 }),
+				expect.any(String)
 			)
 		})
 
@@ -127,7 +138,8 @@ describe("index.ts - Server Instance", () => {
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("3000")
+				expect.objectContaining({ port: 3000 }),
+				expect.any(String)
 			)
 		})
 	})
@@ -145,10 +157,8 @@ describe("index.ts - Server Instance", () => {
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("Server is running on http://localhost:5000")
-			)
-			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("Environment: test")
+				expect.objectContaining({ port: 5000, env: "test" }),
+				"Server started"
 			)
 		})
 
@@ -163,21 +173,35 @@ describe("index.ts - Server Instance", () => {
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("Environment: development")
+				expect.objectContaining({ env: "development" }),
+				"Server started"
 			)
 		})
 	})
 
 	describe("Server Response Behavior", () => {
-		it("should respond with GREETING constant", async () => {
+		it("should respond with GREETING constant on root path", async () => {
 			jest.resetModules()
 			const indexModule = await import("@/index")
 			server = indexModule.default
 			cleanup = indexModule.cleanup
 
-			const response = await request(server).get("/any-path")
+			const response = await request(server).get("/")
 
 			expect(response.text).toBe(GREETING)
+		})
+
+		it("should return 404 for unknown paths", async () => {
+			jest.resetModules()
+			const indexModule = await import("@/index")
+			server = indexModule.default
+			cleanup = indexModule.cleanup
+
+			const response = await request(server).get("/unknown-path")
+
+			expect(response.status).toBe(404)
+			expect(response.body.success).toBe(false)
+			expect(response.body.error.code).toBe("NOT_FOUND")
 		})
 
 		it("should set correct content-type header", async () => {
@@ -222,13 +246,12 @@ describe("index.ts - Server Instance", () => {
 			// Wait for shutdown to complete
 			await new Promise((resolve) => setTimeout(resolve, 200))
 
-			// Verify logger was called for shutdown messages
+			// Verify logger was called for shutdown messages (Pino style)
 			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("SIGTERM received, shutting down gracefully")
+				expect.objectContaining({ signal: "SIGTERM" }),
+				"Shutting down gracefully"
 			)
-			expect(mockLoggerInfo).toHaveBeenCalledWith(
-				expect.stringContaining("Process terminated")
-			)
+			expect(mockLoggerInfo).toHaveBeenCalledWith("Process terminated")
 
 			// Verify process.exit was called with 0
 			expect(mockExit).toHaveBeenCalledWith(0)
@@ -303,7 +326,8 @@ describe("index.ts - Server Instance", () => {
 			await new Promise((resolve) => setTimeout(resolve, 50))
 
 			expect(mockLoggerError).toHaveBeenCalledWith(
-				expect.stringContaining("Server error: Some server error")
+				expect.objectContaining({ err: error }),
+				"Server error"
 			)
 			expect(mockExit).toHaveBeenCalledWith(1)
 
