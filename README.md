@@ -199,14 +199,6 @@ This project includes recommended VS Code extensions in [.vscode/extensions.json
 - **Jest** (`Orta.vscode-jest`) - Integrated Jest testing with inline test results and debugging
 - **Path Intellisense** (`christian-kohler.path-intellisense`) - Autocomplete for file paths in your code
 
-### Installing Extensions
-
-VS Code will automatically prompt you to install recommended extensions when you open the project. Alternatively, you can:
-
-1. Open the Extensions view (Cmd+Shift+X on macOS, Ctrl+Shift+X on Windows/Linux)
-2. Type `@recommended` in the search box
-3. Install the extensions listed under "Workspace Recommendations"
-
 ## Configuration
 
 ### TypeScript Configuration
@@ -248,6 +240,7 @@ Environment variables are defined and validated in `src/lib/env.ts` using Zod sc
 ```typescript
 const EnvSchema = z.object({
   NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
+  // PORT is for example only
   PORT: z
     .string()
     .default("3000")
@@ -261,7 +254,6 @@ const EnvSchema = z.object({
 
 #### Supported Variables
 
-- `PORT` - Server port (default: 3000)
 - `NODE_ENV` - Environment mode (development, production, test)
 
 #### Adding New Environment Variables
