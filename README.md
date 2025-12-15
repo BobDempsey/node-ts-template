@@ -14,10 +14,10 @@ A simple and clean Node.js project template with TypeScript support.
 - 📦 **Modern Node.js** - Targets ES2020 and Node.js 24+
 - 🛠️ **Development Ready** - Pre-configured build and development scripts
 - 🔒 **Type-Safe Environment** - Zod-based environment variable validation and type safety
-- 🧪 **Testing Suite** - Jest and Supertest for comprehensive unit and integration testing
+- 🧪 **Testing Suite** - Jest for unit testing
 - 🎨 **Code Quality** - Biome for fast linting and formatting
 - 🪝 **Pre-commit Hooks** - Husky and lint-staged for automatic code quality checks
-- 📝 **Built-in Logger** - Custom logger with timestamps and log levels
+- 📝 **Built-in Logger** - Pino logger with structured logging and log levels
 - 🔗 **Path Aliases** - TypeScript path aliases (@/*) for cleaner imports
 
 ## Project Structure
@@ -37,15 +37,10 @@ node-ts-template/
 │   ├── lib/
 │   │   ├── env.ts          # Environment variable schema and validation
 │   │   ├── try-parse-env.ts # Zod environment parsing utility
-│   │   ├── logger.ts       # Custom logger with timestamps and log levels
-│   │   └── constants.ts    # Application constants
+│   │   └── logger.ts       # Pino logger with structured logging
 │   └── index.ts            # Main entry point
 ├── tests/
 │   ├── unit/               # Unit tests
-│   ├── integration/        # Integration tests
-│   ├── rest/               # VS Code REST Client requests
-│   │   ├── requests.http   # HTTP request examples
-│   │   └── README.md       # REST Client usage instructions
 │   └── setup/              # Test configuration and utilities
 ├── coverage/               # Test coverage reports (auto-generated)
 ├── dist/                   # Compiled JavaScript output (auto-generated)
@@ -84,7 +79,7 @@ Start the development server with hot reload:
 npm run dev
 ```
 
-This uses `nodemon` and `ts-node` to run TypeScript directly without compilation. The `tsconfig-paths/register` module is loaded to enable path alias resolution (`@/*`) at runtime. The server starts on `http://localhost:3000` and automatically restarts when you make changes to the code.
+This uses `nodemon` and `ts-node` to run TypeScript directly without compilation. The `tsconfig-paths/register` module is loaded to enable path alias resolution (`@/*`) at runtime. The application automatically restarts when you make changes to the code.
 
 ### Building
 
@@ -162,23 +157,16 @@ npm test -- --testNamePattern="should define correct schema structure" --watch
 
 #### Test Structure
 
-The project includes comprehensive testing with Jest and Supertest:
+The project includes comprehensive testing with Jest:
 
 - **Unit Tests** (`tests/unit/`) - Test individual functions and modules
 
   - Environment variable validation
   - Zod schema testing
-  - Utility function testing
-
-- **Integration Tests** (`tests/integration/`) - Test complete workflows
-
-  - HTTP server endpoints
-  - Request/response handling
-  - Server performance testing
+  - Logger functionality
 
 - **Test Utilities** (`tests/setup/`) - Helper functions and configurations
   - Mock environment setup
-  - Test server utilities
   - Common test patterns
 
 #### Writing Tests
@@ -197,37 +185,8 @@ describe("Example Test", () => {
 Tests automatically have access to:
 
 - Jest testing framework
-- Supertest for HTTP testing
 - TypeScript support
 - Environment mocking utilities
-
-### Manual API Testing
-
-This project includes configuration for manual API testing using two popular VS Code extensions:
-
-#### VS Code REST Client
-
-REST Client requests are available in [tests/rest/requests.http](tests/rest/requests.http).
-
-**Quick Start:**
-1. Install the `humao.rest-client` extension (recommended via `.vscode/extensions.json`)
-2. Start the server: `npm run dev`
-3. Open [tests/rest/requests.http](tests/rest/requests.http)
-4. Click "Send Request" above any request
-
-**Features:**
-- Simple text-based request format
-- Variable support with `@baseUrl`
-- Multiple requests in a single file
-- Inline response viewing
-
-#### Available Test Requests
-
-Both tools include the same set of test requests:
-- **Basic GET Requests** - Simple GET with various headers
-- **POST Requests** - JSON, form data, and plain text payloads
-- **Other HTTP Methods** - PUT, DELETE, PATCH requests
-- **Error & Edge Cases** - Content type mismatches and large payloads
 
 ## Recommended VS Code Extensions
 
@@ -393,6 +352,7 @@ If you don't want to use Codecov, the workflow will continue without failing.
 ### Runtime Dependencies
 
 - **dotenv** - Load environment variables from `.env` files
+- **pino** - Fast, low-overhead structured logging
 - **zod** - TypeScript-first schema validation for environment variables
 
 ### Development Dependencies
@@ -403,6 +363,7 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **tsconfig-paths** - Load TypeScript path aliases at runtime
 - **tsc-alias** - Resolve TypeScript path aliases in compiled output
 - **nodemon** - Monitor for file changes and auto-restart
+- **pino-pretty** - Pretty-print Pino logs in development
 - **rimraf** - Cross-platform rm -rf command
 - **@biomejs/biome** - Fast linter and formatter for JavaScript/TypeScript
 - **husky** - Git hooks made easy
@@ -413,8 +374,6 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **jest** - JavaScript testing framework
 - **@types/jest** - TypeScript definitions for Jest
 - **ts-jest** - Jest transformer for TypeScript
-- **supertest** - HTTP testing library
-- **@types/supertest** - TypeScript definitions for Supertest
 
 ## Troubleshooting
 
