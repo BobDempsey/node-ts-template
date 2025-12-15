@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { NODE_ENV_VALUES } from "@/lib/constants"
+import { NODE_ENV_VALUES } from "@/lib/env"
 
 // Mock the tryParseEnv module before importing env
 jest.mock("@/lib/try-parse-env", () => {

@@ -7,8 +7,14 @@
  */
 import { z } from "zod"
 
-import { NODE_ENV_VALUES } from "@/lib/constants"
 import tryParseEnv from "@/lib/try-parse-env"
+
+export const NODE_ENV_VALUES = [
+	"development",
+	"production",
+	"test",
+	"staging"
+] as const
 
 const LOG_LEVELS = ["fatal", "error", "warn", "info", "debug", "trace"] as const
 
