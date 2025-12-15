@@ -37,7 +37,7 @@ const pinoOptions: pino.LoggerOptions = {
 		service: "node-ts-template"
 	},
 	formatters: {
-		level: (label) => ({ level: label })
+		level: (label: string) => ({ level: label })
 	}
 }
 
