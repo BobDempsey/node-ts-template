@@ -1,14 +1,28 @@
+import { randomUUID } from "crypto"
 import { createServer, type Server } from "http"
 import request from "supertest"
 import { GREETING } from "@/lib/constants"
 
-// Create our own server instance for testing
+// Create our own server instance for testing that mirrors the main server
 describe("HTTP Server Integration Tests", () => {
 	let server: Server
 
 	beforeAll(() => {
-		// Create a test server similar to our main server
-		server = createServer((_req, res) => {
+		// Create a test server that mirrors our main server's functionality
+		server = createServer((req, res) => {
+			// Generate or propagate request ID for tracing
+			const requestId = req.headers["x-request-id"]?.toString() || randomUUID()
+			res.setHeader("X-Request-Id", requestId)
+
+			// Health check endpoint
+			if (req.url === "/health") {
+				res.writeHead(200, { "Content-Type": "application/json" })
+				res.end(
+					JSON.stringify({ status: "ok", timestamp: new Date().toISOString() })
+				)
+				return
+			}
+
 			res.writeHead(200, { "Content-Type": "text/plain" })
 			res.end(GREETING)
 		})
@@ -72,14 +86,63 @@ describe("HTTP Server Integration Tests", () => {
 
 	describe("Different Routes", () => {
 		it("should handle requests to different paths", async () => {
-			const paths = ["/test", "/api", "/health", "/nonexistent"]
+			const paths = ["/test", "/api", "/nonexistent"]
 
 			for (const path of paths) {
 				const response = await request(server).get(path)
-				// Our basic server responds the same way to all paths
+				// Our basic server responds the same way to all paths (except /health)
 				expect(response.status).toBe(200)
 				expect(response.text).toBe(GREETING)
 			}
+		})
+	})
+
+	describe("Health Check Endpoint", () => {
+		it("should respond with 200 status on /health", async () => {
+			const response = await request(server).get("/health")
+			expect(response.status).toBe(200)
+		})
+
+		it("should return JSON content type on /health", async () => {
+			const response = await request(server).get("/health")
+			expect(response.headers["content-type"]).toBe("application/json")
+		})
+
+		it("should return status ok in response body", async () => {
+			const response = await request(server).get("/health")
+			expect(response.body.status).toBe("ok")
+		})
+
+		it("should include timestamp in response body", async () => {
+			const response = await request(server).get("/health")
+			expect(response.body.timestamp).toBeDefined()
+			expect(new Date(response.body.timestamp).toISOString()).toBe(
+				response.body.timestamp
+			)
+		})
+	})
+
+	describe("Request ID Tracing", () => {
+		it("should generate X-Request-Id header when not provided", async () => {
+			const response = await request(server).get("/")
+			expect(response.headers["x-request-id"]).toBeDefined()
+			expect(response.headers["x-request-id"]).toMatch(
+				/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+			)
+		})
+
+		it("should propagate X-Request-Id header when provided", async () => {
+			const customRequestId = "custom-request-id-12345"
+			const response = await request(server)
+				.get("/")
+				.set("X-Request-Id", customRequestId)
+
+			expect(response.headers["x-request-id"]).toBe(customRequestId)
+		})
+
+		it("should include X-Request-Id on health endpoint", async () => {
+			const response = await request(server).get("/health")
+			expect(response.headers["x-request-id"]).toBeDefined()
 		})
 	})
 
