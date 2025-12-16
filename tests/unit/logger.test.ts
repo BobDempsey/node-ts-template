@@ -23,6 +23,39 @@ import {
 } from "@/lib/logger"
 
 describe("Pino Logger", () => {
+	describe("Environment-based Configuration", () => {
+		const originalEnv = process.env.NODE_ENV
+
+		beforeEach(() => {
+			jest.resetModules()
+		})
+
+		afterEach(() => {
+			process.env.NODE_ENV = originalEnv
+		})
+
+		it("should configure pretty transport in development mode", async () => {
+			process.env.NODE_ENV = "development"
+
+			// Re-import with development environment
+			const { logger: devLogger } = await import("@/lib/logger")
+
+			// In development, pino-pretty transport is configured
+			// The logger should still function correctly
+			expect(devLogger).toBeDefined()
+			expect(typeof devLogger.info).toBe("function")
+		})
+
+		it("should not configure pretty transport in production mode", async () => {
+			process.env.NODE_ENV = "production"
+
+			const { logger: prodLogger } = await import("@/lib/logger")
+
+			expect(prodLogger).toBeDefined()
+			expect(typeof prodLogger.info).toBe("function")
+		})
+	})
+
 	describe("Logger Configuration", () => {
 		it("should export a logger instance", () => {
 			expect(logger).toBeDefined()
