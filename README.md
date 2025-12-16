@@ -17,6 +17,7 @@ A simple and clean Node.js project template with TypeScript support.
 - 🧪 **Testing Suite** - Jest for unit testing
 - 🎨 **Code Quality** - Biome for fast linting and formatting
 - 🪝 **Pre-commit Hooks** - Husky and lint-staged for automatic code quality checks
+- 📋 **Conventional Commits** - Enforced commit message format with commitlint
 - 📝 **Built-in Logger** - Pino logger with structured logging and log levels
 - 🔗 **Path Aliases** - TypeScript path aliases (@/*) for cleaner imports
 
@@ -48,6 +49,7 @@ node-ts-template/
 ├── .env.example            # Example environment variables
 ├── .gitignore              # Git ignore rules
 ├── biome.json              # Biome linter and formatter configuration
+├── commitlint.config.js    # Commit message linting configuration
 ├── jest.config.ts          # Jest testing configuration
 ├── package.json            # Project configuration
 ├── tsconfig.json           # TypeScript configuration
@@ -122,9 +124,29 @@ This template uses Husky and lint-staged to ensure code quality before commits:
 
 - **Automatic Linting** - Biome automatically checks and fixes issues on staged files
 - **Format Enforcement** - Code is formatted consistently before each commit
+- **Commit Message Validation** - Commitlint ensures all commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) format
 - **Zero Configuration** - Hooks are set up automatically on `npm install`
 
-The pre-commit hook runs `biome check --write` on all staged files, ensuring that only properly formatted and linted code is committed.
+The pre-commit hook runs `biome check --write` on all staged files, ensuring that only properly formatted and linted code is committed. The commit-msg hook validates that your commit message follows the conventional commit format.
+
+#### Conventional Commit Examples
+
+```bash
+feat: add user authentication
+fix: resolve login redirect issue
+docs: update API documentation
+style: format code with prettier
+refactor: extract validation logic into separate module
+test: add unit tests for user service
+chore: update dependencies
+build: configure webpack for production
+ci: add GitHub Actions workflow
+perf: optimize database queries
+```
+
+Format: `<type>(<optional scope>): <description>`
+
+Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`
 
 ### Testing
 
@@ -240,15 +262,6 @@ Environment variables are defined and validated in `src/lib/env.ts` using Zod sc
 ```typescript
 const EnvSchema = z.object({
   NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
-  // PORT is for example only
-  PORT: z
-    .string()
-    .default("3000")
-    .transform((val) => {
-      const parsed = Number.parseInt(val, 10)
-      return Number.isNaN(parsed) ? 3000 : parsed
-    })
-    .optional()
 })
 ```
 
@@ -263,14 +276,6 @@ const EnvSchema = z.object({
    ```typescript
    const EnvSchema = z.object({
      NODE_ENV: z.enum(NODE_ENV_VALUES).optional(),
-     PORT: z
-       .string()
-       .default("3000")
-       .transform((val) => {
-         const parsed = Number.parseInt(val, 10)
-         return Number.isNaN(parsed) ? 3000 : parsed
-       })
-       .optional(),
      // Add your new variables here
      DATABASE_URL: z.string().url(),
      API_KEY: z.string().min(1),
@@ -279,7 +284,6 @@ const EnvSchema = z.object({
 
 2. Create a `.env` file in the root directory for development:
    ```env
-   PORT=3000
    NODE_ENV=development
    DATABASE_URL=postgresql://localhost:5432/mydb
    API_KEY=your-secret-key
@@ -360,6 +364,8 @@ If you don't want to use Codecov, the workflow will continue without failing.
 - **@biomejs/biome** - Fast linter and formatter for JavaScript/TypeScript
 - **husky** - Git hooks made easy
 - **lint-staged** - Run linters on git staged files
+- **@commitlint/cli** - Lint commit messages against conventional commit format
+- **@commitlint/config-conventional** - Conventional commits configuration for commitlint
 
 ### Testing Dependencies
 
